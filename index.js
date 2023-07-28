@@ -103,6 +103,11 @@ app.get('/ticket', async (req, res) => {
     console.log(ticket)
 })
 
+app.get('/test', async (req, res) => {
+    console.log("getting ticket")
+    res.send("Test Passed")
+})
+
 
 switch(process.env.DEPLOYMENT_MODE) {
 
