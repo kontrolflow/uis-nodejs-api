@@ -1,0 +1,16 @@
+name: Push to master
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+    deployment:
+        runs-on: ubuntu-latest
+        steps:
+        - name: Deploy Stage
+          uses: fjogeleit/http-request-action@v1
+          with:
+                url: 'http://143.244.213.209:8080/update/uis-nodejs-api'
+                method: 'GET'

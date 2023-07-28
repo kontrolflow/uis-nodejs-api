@@ -1,0 +1,79 @@
+// Imports for API Routing
+const express = require('express');
+const router = express.Router();
+
+const DattoAlert = require('../models/DattoAlert')
+
+// General Webhook for datto (GET)
+router.get('/webhook', async (req, res) => {
+    console.log("API Notified of Datto Webhook")
+    res.status(200).send("API Notified of Datto Webhook")
+    console.log(req.url)
+})
+
+// General Webhook for datto (POST)
+router.post('/webhook', async (req, res) => {
+    console.log("API Notified of Datto Webhook")
+    res.status(200).send("API Notified of Datto Webhook")
+    console.log(req.url)
+    console.log(req.body)
+})
+
+// Sanity Check 
+router.get('/get-30-day-alerts', async (req, res) => {
+    
+    console.log("Route: /datto/get-30-day-alerts")
+    console.log(req.url)
+
+    if(req.query.apiKey === process.env.USER_API_KEY) {
+
+        const oldAlerts = await DattoAlert.getAllOpenThirtyDayOldAlerts()
+        let response = {
+            message: "Getting Alerts 30 Days Old and Older",
+            count: oldAlerts.length,
+            alerts: oldAlerts
+        }
+        console.log(oldAlerts.length)
+        res.status(200).send(response)
+
+    } else {
+        console.log("Not Authenticated")
+        res.status(403).end()
+    }
+
+})
+
+//Resolve the Alerts
+router.get('/clear-30-day-alerts', async (req, res) => {
+    console.log("Route: /datto/clear-30-day-alerts")
+    console.log(req.url)
+
+
+    if(req.query.apiKey === process.env.USER_API_KEY) {
+        let response = {
+            message: "Clearing Alerts 30 Days Old and Older"
+        }
+    
+        const oldAlerts = await DattoAlert.getAllOpenThirtyDayOldAlerts()
+        response.alertCount = oldAlerts.length
+        response.totalResolved = 0
+        response.totalUnresolved = 0
+    
+        oldAlerts.forEach(async alert => {
+            const resolved = await alert.resolveAlertIfOlderThanThirtyDays()
+            if(resolved.status) {
+                response.totalResolved ++
+            } else {
+                response.totalUnresolved ++
+            }
+        })
+    
+        res.status(200).send(response)
+    } else {
+        console.log("Not Authenticated")
+        res.status(403).end()
+    }
+    
+})
+
+module.exports = router
