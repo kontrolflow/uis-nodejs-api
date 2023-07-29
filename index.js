@@ -122,6 +122,15 @@ switch(process.env.DEPLOYMENT_MODE) {
 
     case "prod":
 
+        console.log("development mode")
+        const httpProdServer = http.createServer(app);
+        httpProdServer.listen(3001, () => {
+            console.log('HTTP Server running on port 3001');
+        });
+        break;
+
+    case "prod-old":
+
         console.log("production moden")
         const httpsServer = https.createServer({
             key: fs.readFileSync('/etc/letsencrypt/live/api.uis.tools/privkey.pem'),
