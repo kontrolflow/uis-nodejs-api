@@ -105,7 +105,7 @@ app.get('/ticket', async (req, res) => {
 
 app.get('/test', async (req, res) => {
     console.log("getting ticket")
-    res.send("Test Passed")
+    res.send("Test 2")
 })
 
 
