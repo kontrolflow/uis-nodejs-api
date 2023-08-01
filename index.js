@@ -44,6 +44,8 @@ app.use('/datto', dattoRoutes)
 const monitorRoutes = require('./routes/monitorRoutes')
 app.use('/monitor', monitorRoutes)
 
+const testRoutes = require('./routes/testRoutes')
+app.use('/test', testRoutes)
 
 
 app.get('/clients', (req, res) => {
@@ -102,12 +104,6 @@ app.get('/ticket', async (req, res) => {
     let ticket = await api.Tickets.get(37679);//Get the root company
     console.log(ticket)
 })
-
-app.get('/test', async (req, res) => {
-    console.log("getting ticket")
-    res.send("Test 2")
-})
-
 
 switch(process.env.DEPLOYMENT_MODE) {
 
