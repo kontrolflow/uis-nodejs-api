@@ -25,7 +25,7 @@ class DB {
 
     async close() {
         try {
-            await this.client.close(); 
+            setTimeout(() => {this.client.close()}, 1500)
         } catch (e) {
             console.error(e);
         }
