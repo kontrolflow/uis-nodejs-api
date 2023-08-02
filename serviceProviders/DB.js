@@ -24,7 +24,11 @@ class DB {
     }
 
     async close() {
-        await this.client.close();
+        try {
+            await this.client.close(); 
+        } catch (e) {
+            console.error(e);
+        }
     }
  
 }
