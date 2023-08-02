@@ -90,21 +90,6 @@ app.get('/prompt', async (req, res) => {
 
 })
 
-app.get('/ticket', async (req, res) => {
-    console.log("getting ticket")
-    const {AutotaskRestApi} = require('@apigrate/autotask-restapi');
-
-    const autotask = await new AutotaskRestApi(
-        "7ndf4ynhtt7bgm@UMBRELLAITGROUP.COM", // make sure it's an API User
-        'mJ@48eB~Y0#i6$wNQ1*nq$E9#', 
-        'E7IGRNAP7WCCAA6WMKY3QQPFCBF' 
-    );
-
-    let api = await autotask.api();
-    let ticket = await api.Tickets.get(37679);//Get the root company
-    console.log(ticket)
-})
-
 switch(process.env.DEPLOYMENT_MODE) {
 
     case "dev":
