@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // Database Import
-// const DB = require("../serviceProviders/DB")
+const DB = require("../serviceProviders/DB")
 
 router.get('/create-test-tickets', async (req, res) => {
 

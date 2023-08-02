@@ -1,8 +1,19 @@
+
+// ╔═══╗──╔╗─╔╗────╔═══╗─────╔╗────╔═══╗─────╔╗─────╔╗╔╗
+// ╚╗╔╗║─╔╝╚╦╝╚╗───║╔═╗║────╔╝╚╗───║╔═╗║────╔╝╚╗────║║║║
+// ─║║║╠═╩╗╔╩╗╔╬══╗║╚═╝╠══╦╗╠╗╔╬══╗║║─╚╬══╦═╬╗╔╬═╦══╣║║║╔══╦═╗
+// ─║║║║╔╗║║─║║║╔╗║║╔╗╔╣╔╗║║║║║║║═╣║║─╔╣╔╗║╔╗╣║║╔╣╔╗║║║║║║═╣╔╝
+// ╔╝╚╝║╔╗║╚╗║╚╣╚╝║║║║╚╣╚╝║╚╝║╚╣║═╣║╚═╝║╚╝║║║║╚╣║║╚╝║╚╣╚╣║═╣║
+// ╚═══╩╝╚╩═╝╚═╩══╝╚╝╚═╩══╩══╩═╩══╝╚═══╩══╩╝╚╩═╩╝╚══╩═╩═╩══╩╝
+
 // Imports for API Routing
 const express = require('express');
 const router = express.Router();
 
+// App Imports
 const DattoAlert = require('../models/DattoAlert')
+const DB = require("../serviceProviders/DB")
+
 
 // General Webhook for datto (GET)
 router.get('/webhook', async (req, res) => {
@@ -13,10 +24,22 @@ router.get('/webhook', async (req, res) => {
 
 // General Webhook for datto (POST)
 router.post('/webhook', async (req, res) => {
+    
     console.log("Datto Webhook hit by POST request")
-    res.status(200).send("API Notified of Datto Webhook")
-    console.log(req.url)
-    console.log(req.body)
+    res.status(200).send("Datto Webhook Triggered")
+
+    const db = new DB()
+    const result = await db.query().collection("DattoWebhookEntries").insertOne(req.body)
+    
+    if (result) {
+        console.log("The following entry was saved:")
+        console.log(result);
+    } else {
+        console.log("No result from saving:");
+        console.log(result);
+    }
+    
+    db.close()
 })
 
 // Sanity Check 
