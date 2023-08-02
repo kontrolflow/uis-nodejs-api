@@ -39,7 +39,7 @@ router.post('/webhook', async (req, res) => {
         console.log(result);
     }
     
-    db.close()
+    // db.close()
 })
 
 // Sanity Check 
