@@ -1,11 +1,7 @@
 require('dotenv').config()
 const express = require('express')
 var cors = require('cors')
-const https = require('https');
 const http = require('http');
-const fs = require('fs');
-
-// Test change
 
 const clients = require('./clients.json');
 
@@ -94,7 +90,7 @@ switch(process.env.DEPLOYMENT_MODE) {
 
     case "dev":
 
-        console.log("development mode")
+        console.log("Starting UIS-NodeJS-API in Development Mode")
         const httpServer = http.createServer(app);
         httpServer.listen(80, () => {
             console.log('HTTP Server running on port 80');
@@ -103,22 +99,10 @@ switch(process.env.DEPLOYMENT_MODE) {
 
     case "prod":
 
-        console.log("development mode")
+        console.log("Starting UIS-NodeJS-API in Development Mode")
         const httpProdServer = http.createServer(app);
         httpProdServer.listen(3001, () => {
             console.log('HTTP Server running on port 3001');
-        });
-        break;
-
-    case "prod-old":
-
-        console.log("production moden")
-        const httpsServer = https.createServer({
-            key: fs.readFileSync('/etc/letsencrypt/live/api.uis.tools/privkey.pem'),
-            cert: fs.readFileSync('/etc/letsencrypt/live/api.uis.tools/fullchain.pem'),
-        }, app);
-        httpsServer.listen(443, () => {
-            console.log('HTTPS Server running on port 443');
         });
         break;
 
