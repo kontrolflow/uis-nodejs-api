@@ -38,8 +38,8 @@ router.post('/webhook', async (req, res) => {
         console.log("No result from saving:");
         console.log(result);
     }
-    
-    await db.close()
+
+    db.close()
 })
 
 // Sanity Check 
