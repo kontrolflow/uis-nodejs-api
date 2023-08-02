@@ -2,6 +2,9 @@
 const express = require('express');
 const router = express.Router();
 
+// Database Import
+const DB = require("../serviceProviders/DB")
+
 router.get('/create-test-tickets', async (req, res) => {
 
     console.log("Creating Test Tickets")
@@ -86,3 +89,26 @@ router.get('/get-ticket-2', async (req, res) => {
     let ticket = await api.Tickets.get(37679);//Get the root company
     console.log(ticket)
 })
+
+router.get('/db-connection', async (req, res) => {
+
+    // console.log(Mongo)
+
+    const db = new DB()
+
+    const result = await db.query().collection("Users").find({}).toArray()
+    
+    if (result) {
+        // console.log(`Found a listing in the collection with the name '${nameOfListing}':`);
+        console.log(result);
+    } else {
+        console.log("No Result");
+    }
+    
+    db.close()
+
+    res.send("MongoDB")
+
+})
+
+module.exports = router
