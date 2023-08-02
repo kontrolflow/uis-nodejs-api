@@ -3,7 +3,7 @@ const express = require('express');
 const router = express.Router();
 
 // Database Import
-const DB = require("../serviceProviders/DB")
+// const DB = require("../serviceProviders/DB")
 
 router.get('/create-test-tickets', async (req, res) => {
 
@@ -90,25 +90,25 @@ router.get('/get-ticket-2', async (req, res) => {
     console.log(ticket)
 })
 
-router.get('/db-connection', async (req, res) => {
+// router.get('/db-connection', async (req, res) => {
 
-    // console.log(Mongo)
+//     // console.log(Mongo)
 
-    const db = new DB()
+//     const db = new DB()
 
-    const result = await db.query().collection("Users").find({}).toArray()
+//     const result = await db.query().collection("Users").find({}).toArray()
     
-    if (result) {
-        // console.log(`Found a listing in the collection with the name '${nameOfListing}':`);
-        console.log(result);
-    } else {
-        console.log("No Result");
-    }
+//     if (result) {
+//         // console.log(`Found a listing in the collection with the name '${nameOfListing}':`);
+//         console.log(result);
+//     } else {
+//         console.log("No Result");
+//     }
     
-    db.close()
+//     db.close()
 
-    res.send("MongoDB")
+//     res.send("MongoDB")
 
-})
+// })
 
 module.exports = router
