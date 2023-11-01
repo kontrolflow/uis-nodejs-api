@@ -48,11 +48,12 @@ class AutoTaskTicket {
             console.log("PAF Approval Ticket")
             const fields = {
                 companyID: 220,
+                companyLocationID: null,
                 priority: 1
             }
             this.update(fields)
             resolve(true)
-            
+
         } else {
 
             // Find Company By Title

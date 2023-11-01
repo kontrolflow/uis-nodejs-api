@@ -79,12 +79,12 @@ router.get('/create-test-tickets', async (req, res) => {
 
     const Email = require('../serviceProviders/Email')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - PAF Approval', 'PAF Approval')
+    // Email.send('support@umbrellaitgroup.com', 'Test X - PAF Approval', 'PAF Approval')
 
 
     // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Ivantsov.tech', '9043219777')
 
-    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Lindell & Farson, PA', '9043219777')
+    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Lindell & Farson, PA', '9043219777')
 
     // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars Landing', '9043219777')
 
