@@ -41,7 +41,7 @@ router.get('/company-not-found', async (req, res) => {
 
     // AutoTask hits this endpoint if a ticket is created without a company
     res.status(200).send("Company Not Identified - Web Hook Triggered")
-    console.log('/get-ticket (Route)')
+    console.log('/autotask/company-not-found (Route)')
     console.log(req.url)
 
     // Get Ticket ID
@@ -59,6 +59,12 @@ router.get('/company-not-found', async (req, res) => {
         console.log("Unable to Determine Company")
     }
 
+    // if(await ticket.processCompanyNotFoundTicket()) {
+    //     console.log("Ticket Processed")
+    // } else {
+    //     console.log("Unable to Process Ticket")
+    // }
+
 })
 
 // This is a required webhook for AutoTask. Has no function other than existing atm
@@ -73,15 +79,18 @@ router.get('/create-test-tickets', async (req, res) => {
 
     const Email = require('../serviceProviders/Email')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Ivantsov.tech', '9043219777')
+    Email.send('support@umbrellaitgroup.com', 'Test X - PAF Approval', 'PAF Approval')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Lindell & Farson, PA', '9043219777')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars Landing', '9043219777')
+    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Ivantsov.tech', '9043219777')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars + Somthing Else', '9043219777')
+    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Lindell & Farson, PA', '9043219777')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - InDepth Environmental Inc.', '9043219777')
+    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars Landing', '9043219777')
+
+    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars + Somthing Else', '9043219777')
+
+    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - InDepth Environmental Inc.', '9043219777')
 
     // Email.send('support@umbrellaitgroup.com', 'Voicemail', 'Testing 123...')
 

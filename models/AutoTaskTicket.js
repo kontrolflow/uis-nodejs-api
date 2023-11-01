@@ -16,7 +16,7 @@ class AutoTaskTicket {
             // Get Ticket Info
             const ticketDetails = await AutoTaskAPI.getTicketDetails(this.id)
 
-            // console.log(ticketDetails)
+            console.log(ticketDetails)
 
             // Set Object Data
             this.title = ticketDetails.title
@@ -44,20 +44,33 @@ class AutoTaskTicket {
 
         console.log(this)
 
-        // Find Company By Title
-        const companyID = await this.constructor.matchCompanyToString(this.title, companies)
-
-        // If Company Found Try to Update Else Return False
-        if(companyID >= 0) {
+        if(this.title.includes('PAF Approval')){
+            console.log("PAF Approval Ticket")
             const fields = {
-                companyID: companyID,
-                companyLocationID: null
+                companyID: 220,
+                priority: 1
             }
-            
             this.update(fields)
             resolve(true)
+            
         } else {
-            resolve(false)
+
+            // Find Company By Title
+            const companyID = await this.constructor.matchCompanyToString(this.title, companies)
+
+            // If Company Found Try to Update Else Return False
+            if(companyID >= 0) {
+                const fields = {
+                    companyID: companyID,
+                    companyLocationID: null
+                }
+                
+                this.update(fields)
+                resolve(true)
+            } else {
+                resolve(false)
+            }
+
         }
 
         })

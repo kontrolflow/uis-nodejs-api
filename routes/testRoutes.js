@@ -5,6 +5,24 @@ const router = express.Router();
 // Database Import
 // const DB = require("../serviceProviders/DB")
 
+router.get('/version', async (req, res) => {
+    let version = 2
+    console.log("Version: " + version)
+    res.send("Version: " + version)
+})
+
+router.get('/send-email', async (req, res) => {
+
+    console.log("Sending Test Email")
+
+    const Email = require('../serviceProviders/Email')
+
+    Email.send('jullian@abinsay.com', 'Test Email from UIS-NodeJS-API', '9043219777')
+
+    res.status(200).send("Email sent successfully")
+
+})
+
 router.get('/create-test-tickets', async (req, res) => {
 
     console.log("Creating Test Tickets")
@@ -30,7 +48,7 @@ router.get('/create-test-tickets', async (req, res) => {
     //     console.log('Email sent successfully');
         res.status(200).send("Email sent successfully")
     // } else {
-    //     console.log('Error Occurs');
+    //     console.log('Error Occurs')
     //     res.status(200).send("Error Occurs")
     // }
     // https://ww14.autotask.net/Autotask/AutotaskExtend/ExecuteCommand.aspx?Code=OpenTicketDetail&TicketID=37708
@@ -43,10 +61,11 @@ router.get('/get-ticket', async (req, res) => {
 
     const AutoTaskTicket = require('../models/AutoTaskTicket')
 
-    const ticket = new AutoTaskTicket(37708)
+    const ticket = new AutoTaskTicket(40861)
     
     if(await ticket.init()) {
         console.log(ticket)
+        res.send(ticket)
     }
 
 })
