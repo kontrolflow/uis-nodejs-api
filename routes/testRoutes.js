@@ -6,7 +6,7 @@ const router = express.Router();
 // const DB = require("../serviceProviders/DB")
 
 router.get('/version', async (req, res) => {
-    let version = 2
+    let version = 2.1
     console.log("Version: " + version)
     res.send("Version: " + version)
 })
