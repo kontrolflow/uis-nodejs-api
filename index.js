@@ -40,6 +40,9 @@ app.use('/datto', dattoRoutes)
 const monitorRoutes = require('./routes/monitorRoutes')
 app.use('/monitor', monitorRoutes)
 
+const utilityRoutes = require('./routes/utilityRoutes')
+app.use('/utilities', utilityRoutes)
+
 const testRoutes = require('./routes/testRoutes')
 app.use('/test', testRoutes)
 
