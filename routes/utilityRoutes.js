@@ -32,6 +32,14 @@ router.post('/riq-parse-lead-email', async (req, res) => {
         } else if(row.includes("Date Time:")) {
             const date = row.replace("Date Time:", "")
             lead['date-time'] = date.trim()
+            const arr = lead['date-time'].split(' ')
+            const dateTimeString = arr[2] + ', ' arr
+            console.log("DateTimeString: " + dateTimeString)
+            // const regex = /\(.*\)/gm;
+            // const dateNoTimeZone = lead['date-time'].replace(regex, '')
+            // const startTime = Date.parse(dateNoTimeZone)
+            // console.log(dateNoTimeZone);
+            // console.log("Start Time:" + startTime)
         } else if(row.includes("Notes:")) {
             const notes = row.replace("Notes:", "")
             lead['notes'] = notes.trim()
