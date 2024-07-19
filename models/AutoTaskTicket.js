@@ -54,6 +54,16 @@ class AutoTaskTicket {
             this.update(fields)
             resolve(true)
 
+        } else if(this.title.includes('Control Panel Daily Report')){
+            console.log("Control Panel Daily Report Ticket")
+            const fields = {
+                companyID: 0,
+                companyLocationID: null,
+                // priority: 1
+            }
+            this.update(fields)
+            resolve(true)
+
         } else {
 
             // Find Company By Title
