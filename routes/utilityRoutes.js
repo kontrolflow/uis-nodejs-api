@@ -33,7 +33,7 @@ router.post('/riq-parse-lead-email', async (req, res) => {
             const date = row.replace("Date Time:", "")
             lead['date-time'] = date.trim()
             const arr = lead['date-time'].split(' ')
-            const dateTimeString = arr[2] + ', ' arr
+            const dateTimeString = arr[2] + ', ' + arr
             console.log("DateTimeString: " + dateTimeString)
             // const regex = /\(.*\)/gm;
             // const dateNoTimeZone = lead['date-time'].replace(regex, '')
