@@ -68,6 +68,7 @@ class AutoTaskAPI {
                 .catch(err=> {
                     resolve(false)
                     console.log(err)
+                    console.log(err.response.data.errors)
                 })
 
         })

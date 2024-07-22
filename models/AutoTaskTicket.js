@@ -48,6 +48,7 @@ class AutoTaskTicket {
             console.log("PAF Approval Ticket")
             const fields = {
                 companyID: 220,
+                contactID: 30683238,
                 companyLocationID: null,
                 priority: 1
             }
@@ -58,8 +59,8 @@ class AutoTaskTicket {
             console.log("Control Panel Daily Report Ticket")
             const fields = {
                 companyID: 0,
+                contactID: 30683036,
                 companyLocationID: null,
-                // priority: 1
             }
             this.update(fields)
             resolve(true)
