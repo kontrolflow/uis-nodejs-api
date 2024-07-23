@@ -48,7 +48,7 @@ class AutoTaskTicket {
             console.log("PAF Approval Ticket")
             const fields = {
                 companyID: 220,
-                contactID: 30683238,
+                contactID: null,
                 companyLocationID: null,
                 priority: 1
             }
@@ -59,7 +59,27 @@ class AutoTaskTicket {
             console.log("Control Panel Daily Report Ticket")
             const fields = {
                 companyID: 0,
-                contactID: 30683036,
+                contactID: null,
+                companyLocationID: null,
+            }
+            this.update(fields)
+            resolve(true)
+
+        } else if(this.title.includes('SCJX')){
+            console.log("Ticket for Schultz Center")
+            const fields = {
+                companyID: 215,
+                contactID: null,
+                companyLocationID: null,
+            }
+            this.update(fields)
+            resolve(true)
+
+        } else if(this.title.includes('FCOSM')){
+            console.log("Ticket for Florida Center of Sleep Medicine")
+            const fields = {
+                companyID: 199,
+                contactID: null,
                 companyLocationID: null,
             }
             this.update(fields)
