@@ -73,39 +73,4 @@ router.get('/deactivate', async (req, res) => {
     res.status(200).send("Webhook Deactivated")
 })
 
-router.get('/create-test-tickets', async (req, res) => {
-
-    console.log("Creating Test Tickets")
-
-    const Email = require('../serviceProviders/Email')
-
-    // Email.send('support@umbrellaitgroup.com', 'Test X - PAF Approval', 'PAF Approval')
-
-
-    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Ivantsov.tech', '9043219777')
-
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Lindell & Farson, PA', '9043219777')
-
-    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars Landing', '9043219777')
-
-    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars + Somthing Else', '9043219777')
-
-    // Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - InDepth Environmental Inc.', '9043219777')
-
-    // Email.send('support@umbrellaitgroup.com', 'Voicemail', 'Testing 123...')
-
-    // Email.send('support@umbrellaitgroup.com', 'Meraki - Please Ignore', 'Testing 123...')
-
-    
-    // if(await Email.send('support@umbrellaitgroup.com', 'Testing - Please Ignore', 'Testing 123...') == true) {
-    //     console.log('Email sent successfully');
-        res.status(200).send("Email sent successfully")
-    // } else {
-    //     console.log('Error Occurs');
-    //     res.status(200).send("Error Occurs")
-    // }
-    // https://ww14.autotask.net/Autotask/AutotaskExtend/ExecuteCommand.aspx?Code=OpenTicketDetail&TicketID=37708
-
-})
-
 module.exports = router

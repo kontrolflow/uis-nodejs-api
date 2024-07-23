@@ -29,19 +29,31 @@ router.get('/create-test-tickets', async (req, res) => {
 
     const Email = require('../serviceProviders/Email')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Ivantsov.tech', '9043219777')
+    // Email.send('support@umbrellaitgroup.com', 'Testing - Control Panel Daily Report', '9043219777')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Lindell & Farson, PA', '9043219777')
+    // Email.send('support@umbrellaitgroup.com', 'Testing - PAF Approval', '9043219777')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars Landing', '9043219777')
+    Email.send('support@umbrellaitgroup.com', 'Testing - SCJX', '9043219777')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - Vicars + Somthing Else', '9043219777')
+    Email.send('support@umbrellaitgroup.com', 'Testing - Alert for SCJX', '9043219777')
 
-    Email.send('support@umbrellaitgroup.com', 'Test X - Please Ignore - InDepth Environmental Inc.', '9043219777')
+    Email.send('support@umbrellaitgroup.com', 'Testing - FCOSM', '9043219777')
+
+    Email.send('support@umbrellaitgroup.com', 'Testing - Alert for FCOSM', '9043219777')
+
+    // Email.send('support@umbrellaitgroup.com', 'Testing - Ivantsov.tech', '9043219777')
+
+    // Email.send('support@umbrellaitgroup.com', 'Testing - Lindell & Farson, PA', '9043219777')
+
+    // Email.send('support@umbrellaitgroup.com', 'Testing - Vicars Landing', '9043219777')
+
+    // Email.send('support@umbrellaitgroup.com', 'Testing - Vicars + Somthing Else', '9043219777')
+
+    // Email.send('support@umbrellaitgroup.com', 'Testing - InDepth Environmental Inc.', '9043219777')
 
     // Email.send('support@umbrellaitgroup.com', 'Voicemail', 'Testing 123...')
 
-    // Email.send('support@umbrellaitgroup.com', 'Meraki - Please Ignore', 'Testing 123...')
+    // Email.send('support@umbrellaitgroup.com', 'Meraki - Please Ignore', 'Testing 123...')    
 
     
     // if(await Email.send('support@umbrellaitgroup.com', 'Testing - Please Ignore', 'Testing 123...') == true) {
