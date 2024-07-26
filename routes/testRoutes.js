@@ -145,98 +145,113 @@ router.get('/db-connection', async (req, res) => {
 router.get('/parse', async (req, res) => {
 
     function parseBackupReport(jsonData) {
-        const description = jsonData.item.description;
-        const title = jsonData.item.title;
-        const lines = description.split('\n');
-        
-        const result = {
-          reportInfo: {
-            title: title,
-            date: '',
-            timezone: '',
-            detailedReportLink: ''
-          },
-          customers: {},
-          summary: {
-            totalIssues: 0,
-            issuesByCustomer: {}
-          }
-        };
-      
-        let currentCustomer = null;
-        let totalIssuesFromTitle = 0;
-      
-        if (title.includes("Issues")) {
-          totalIssuesFromTitle = parseInt(title.split(":")[1].trim().split(" ")[0]);
-        }
-      
-        for (let i = 0; i < lines.length; i++) {
-          let line = lines[i].trim();
-          
-          if (line.match(/^\w{3}, \d{2} \w{3} \d{4}/)) {
-            result.reportInfo.date = line;
-          } else if (line.startsWith('(UTC')) {
-            result.reportInfo.timezone = line;
-          } else if (line.startsWith('Click here')) {
-            result.reportInfo.detailedReportLink = line;
-          } else if (line && !line.includes('Virtual Machines') && !line.includes('VMs') && !line.includes('Status')) {
-            // Check if the next line contains "Virtual Machines" to confirm it's a customer name
-            if (i + 1 < lines.length && lines[i + 1].includes('Virtual Machines')) {
-              currentCustomer = line;
-              result.customers[currentCustomer] = {
-                totalVMs: 0,
-                backups: { successful: 0, status: '' },
-                offsiteCopies: { successful: 0, status: '' },
-                verification: { successful: 0, status: '' },
-                replication: { successful: 0, status: '' },
-                issues: 0
-              };
-            }
-          } else if (currentCustomer && line.includes('Total of')) {
-            const totalVMs = parseInt(line.match(/Total of (\d+) VMs/)[1]);
-            result.customers[currentCustomer].totalVMs = totalVMs;
-          } else if (currentCustomer && line.startsWith('VMs')) {
-            const parts = line.split(/\s+/).filter(part => part.trim() !== '');
-            if (parts.length >= 5) {
-              result.customers[currentCustomer].backups.successful = parseInt(parts[1]);
-              result.customers[currentCustomer].backups.status = parts[2];
-              result.customers[currentCustomer].offsiteCopies.successful = parseInt(parts[3]);
-              result.customers[currentCustomer].offsiteCopies.status = parts[4];
-            }
-          } else if (currentCustomer && line.startsWith('Status')) {
-            const parts = line.split(/\s+/).filter(part => part.trim() !== '');
-            if (parts.length >= 3) {
-              result.customers[currentCustomer].verification.status = parts[1];
-              result.customers[currentCustomer].replication.status = parts[2];
-            }
-          } else if (currentCustomer && line.toLowerCase().includes('issues detected')) {
-            const issuesDetected = parseInt(line.match(/(\d+)/)[1]);
-            result.customers[currentCustomer].issues = issuesDetected;
-            result.summary.totalIssues += issuesDetected;
-            result.summary.issuesByCustomer[currentCustomer] = {
-              totalIssues: issuesDetected
-            };
-          }
-        }
-      
-        // Validate total issues with the title
-        if (totalIssuesFromTitle > 0 && totalIssuesFromTitle !== result.summary.totalIssues) {
-          console.warn(`Warning: Total issues in title (${totalIssuesFromTitle}) does not match calculated total (${result.summary.totalIssues})`);
-        }
-      
-        return result;
+      const string = jsonData.item.description;
+      let cleanString = string.replaceAll(' \t', '')
+      cleanString = cleanString.replaceAll('\r\n\r\n ', 'linebreak')
+      // console.log(cleanString)
+      const regexp = /the Control Panellinebreak(.*)linebreakPlease do not/g;
+      // const regexp = /Control Panel\r\n\r\n \t /gm;
+      const matches = cleanString.matchAll(regexp);
+      // console.log(string)
+      // console.log(matches)
+      let data = null
+      for (const match of matches) {
+        data = match[1]
+        // console.log(match[1]);
+        // console.log(match.index)
       }
-      
-      // Example usage:
-      const inputJson = {
-        item: {
-            title: "Control Panel Daily Report: 5 Issues",
-            description: "From Hornetsecurity <noreply@cloud.hornetsecurity.com>: Control Panel Daily Report\r\n\r\n \t Thu, 18 Jul 2024 07:30 - Fri, 19 Jul 2024 07:29\r\n\r\n \t (UTC-05:00) Eastern Time (US & Canada)\r\n\r\n \t Click here to view detailed report in the Control Panel\r\n\r\n \t Workplace Solutions Inc\r\n\r\n Virtual Machines (Total of 7 VMs) Virtual Machines (Total of 7 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 5 issues detected\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Acon\r\n\r\n Virtual Machines (Total of 2 VMs) Virtual Machines (Total of 2 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Florida Centers of Sleep Medicine\r\n\r\n Virtual Machines (Total of 11 VMs) Virtual Machines (Total of 11 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 8\r\n\r\n \t Successful\r\n\r\n \t 4\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Jacksonville Endodontic Associates\r\n\r\n Virtual Machines (Total of 3 VMs) Virtual Machines (Total of 3 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Lindell & Farson\r\n\r\n Virtual Machines (Total of 5 VMs) Virtual Machines (Total of 5 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 4\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t National Carburetor\r\n\r\n Virtual Machines (Total of 3 VMs) Virtual Machines (Total of 3 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 3\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Peter Sleiman Development Group\r\n\r\n Virtual Machines (Total of 3 VMs) Virtual Machines (Total of 3 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Schultz Center\r\n\r\n Virtual Machines (Total of 7 VMs) Virtual Machines (Total of 7 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 6\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Ticon\r\n\r\n Virtual Machines (Total of 2 VMs) Virtual Machines (Total of 2 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Umbrella IT Group\r\n\r\n Virtual Machines (Total of 13 VMs) Virtual Machines (Total of 13 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 9\r\n\r\n \t Successful\r\n\r\n \t 7\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Vicars Landing\r\n\r\n Virtual Machines (Total of 28 VMs) Virtual Machines (Total of 28 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 15\r\n\r\n \t Successful\r\n\r\n \t 3\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n Please do not reply to this email. If you need to contact Hornetsecurity\r\n with questions or concerns, please click here."
+      console.log(data)
+      const array = data.split('linebreak')
+      console.log(array)
+      let cleanArray = []
+      array.forEach(el => {
+        if(el.includes("Verification")) {
+          return
+        } else if(el.includes("VMs")) {
+          return
+        } else if(el.includes("Status")) {
+          return
+        } else {
+          cleanArray.push(el)
         }
-      };
+      })
       
-      const parsedResult = parseBackupReport(inputJson);
-      console.log(JSON.stringify(parsedResult, null, 2));
+      console.log(cleanArray)
+      // cleanArray.push("4Thomas")
+
+      // Initiate Result
+      let result = []
+
+      let currentClient = null
+
+      function tisClient(clientName) {
+        if(currentClient == null) {
+          currentClient = 0
+        } else {
+          currentClient++
+        }
+
+        result[currentClient] = {
+          "clientName":clientName,
+          "errors":false,
+          "errorMessage":''
+        }
+      }
+
+      function tisErrorMessage(message) {
+        // result[currentClient].errorMessage = message + " with " + errorTypes[currentError]
+        if(result[currentClient].errorMessage == ''){
+          result[currentClient].errorMessage = message + " with " + errorTypes[currentError]
+        } else {
+          result[currentClient].errorMessage = result[currentClient].errorMessage + ", " + message + " with " + errorTypes[currentError]
+        }
+        result[currentClient].errors = true
+      }
+
+      const errorTypes = ["Backups", "Offsite Copies", "Verification", "Replication"]
+      let currentError = 3
+
+      function successCount() {
+        if(currentError === 3) {
+          currentError = 0
+        } else {
+          currentError++
+        }
+      }
+
+      cleanArray.forEach(el => {
+        
+        if(isNaN(el) && !el.includes('uccessful') && !el.includes(' issues detected')) {
+          // It's a Client 
+          tisClient(el)
+          console.log(el)
+        } else {
+          if(!isNaN(el)) {
+            // It's a count of successes / document then change error type
+            successCount()
+            // console.log(errorTypes[currentError])
+          } else if(el.includes(" issues detected")) {
+            // Errors are present
+            tisErrorMessage(el)
+            // console.log(el + " with " + errorTypes[currentError])
+          }
+        }
+         
+      })
+
+      return result;
+    }
+      
+    // Example usage:
+    const inputJson = {
+      item: {
+          title: "Control Panel Daily Report: 5 Issues",
+          description: "From Hornetsecurity <noreply@cloud.hornetsecurity.com>: Control Panel Daily Report\r\n\r\n \t Thu, 18 Jul 2024 07:30 - Fri, 19 Jul 2024 07:29\r\n\r\n \t (UTC-05:00) Eastern Time (US & Canada)\r\n\r\n \t Click here to view detailed report in the Control Panel\r\n\r\n \t Workplace Solutions Inc\r\n\r\n Virtual Machines (Total of 7 VMs) Virtual Machines (Total of 7 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 5 issues detected\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Acon\r\n\r\n Virtual Machines (Total of 2 VMs) Virtual Machines (Total of 2 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Florida Centers of Sleep Medicine\r\n\r\n Virtual Machines (Total of 11 VMs) Virtual Machines (Total of 11 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 8\r\n\r\n \t Successful\r\n\r\n \t 4\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Jacksonville Endodontic Associates\r\n\r\n Virtual Machines (Total of 3 VMs) Virtual Machines (Total of 3 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Lindell & Farson\r\n\r\n Virtual Machines (Total of 5 VMs) Virtual Machines (Total of 5 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 4\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t National Carburetor\r\n\r\n Virtual Machines (Total of 3 VMs) Virtual Machines (Total of 3 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 3\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Peter Sleiman Development Group\r\n\r\n Virtual Machines (Total of 3 VMs) Virtual Machines (Total of 3 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Schultz Center\r\n\r\n Virtual Machines (Total of 7 VMs) Virtual Machines (Total of 7 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 6\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Ticon\r\n\r\n Virtual Machines (Total of 2 VMs) Virtual Machines (Total of 2 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Umbrella IT Group\r\n\r\n Virtual Machines (Total of 13 VMs) Virtual Machines (Total of 13 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 9\r\n\r\n \t Successful\r\n\r\n \t 7\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t Vicars Landing\r\n\r\n Virtual Machines (Total of 28 VMs) Virtual Machines (Total of 28 VMs) Backups Offsite Copies Verification Replication\r\n\r\n \t VMs\r\n\r\n \t Status\r\n\r\n \t 15\r\n\r\n \t Successful\r\n\r\n \t 3\r\n\r\n \t Successful\r\n\r\n \t 0\r\n\r\n \t Successful\r\n\r\n \t 2\r\n\r\n \t Successful\r\n\r\n Please do not reply to this email. If you need to contact Hornetsecurity\r\n with questions or concerns, please click here."
+      }
+    };
+    
+    const parsedResult = parseBackupReport(inputJson);
+    // console.log(JSON.stringify(parsedResult, null, 2));
 
     res.send(JSON.stringify(parsedResult, null, 2))
 
