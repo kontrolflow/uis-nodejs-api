@@ -1,0 +1,43 @@
+[
+    {
+        "matches":[
+            "PAF Approval"
+        ],
+        "fields":{
+            "companyID": 220,
+            "contactID": null,
+            "companyLocationID": null,
+            "priority": 1
+        }
+    },
+    {
+        "matches":[
+            "Control Panel Daily Report"
+        ],
+        "fields":{
+            "companyID": 0,
+            "contactID": null,
+            "companyLocationID": null
+        }
+    },
+    {
+        "matches":[
+            "SCJX"
+        ],
+        "fields":{
+            "companyID": 215,
+            "contactID": null,
+            "companyLocationID": null
+        }
+    },
+    {
+        "matches":[
+            "FCOSM"
+        ],
+        "fields":{
+            "companyID": 199,
+            "contactID": null,
+            "companyLocationID": null
+        }
+    }
+]

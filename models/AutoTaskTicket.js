@@ -37,73 +37,53 @@ class AutoTaskTicket {
         
     }
 
+    static matchCompanyUsingMappings(ticket) {
+        const mappings = require('../CompanyNotFoundMappings.json')
+        let fields = false
+        mappings.forEach((matchSet) => {
+            matchSet.matches.forEach((match) => {
+                if(ticket.title.includes(match)) {
+                    fields = matchSet.fields
+                }
+            })
+            console.log(matchSet)
+        })
+        console.log(mappings)
+        console.log(ticket)
+        return fields
+    }
+
     autoFindCompany() {
         return new Promise(async resolve => {
-        // Get All Companies
-        const companies = await AutoTaskAPI.getAllClients()
 
-        console.log(this)
+            // Get All Companies
+            const companies = await AutoTaskAPI.getAllClients()
 
-        if(this.title.includes('PAF Approval')){
-            console.log("PAF Approval Ticket")
-            const fields = {
-                companyID: 220,
-                contactID: null,
-                companyLocationID: null,
-                priority: 1
-            }
-            this.update(fields)
-            resolve(true)
+            console.log(this)
 
-        } else if(this.title.includes('Control Panel Daily Report')){
-            console.log("Control Panel Daily Report Ticket")
-            const fields = {
-                companyID: 0,
-                contactID: null,
-                companyLocationID: null,
-            }
-            this.update(fields)
-            resolve(true)
+            const fields = await this.constructor.matchCompanyUsingMappings(this)
 
-        } else if(this.title.includes('SCJX')){
-            console.log("Ticket for Schultz Center")
-            const fields = {
-                companyID: 215,
-                contactID: null,
-                companyLocationID: null,
-            }
-            this.update(fields)
-            resolve(true)
-
-        } else if(this.title.includes('FCOSM')){
-            console.log("Ticket for Florida Center of Sleep Medicine")
-            const fields = {
-                companyID: 199,
-                contactID: null,
-                companyLocationID: null,
-            }
-            this.update(fields)
-            resolve(true)
-
-        } else {
-
-            // Find Company By Title
-            const companyID = await this.constructor.matchCompanyToString(this.title, companies)
-
-            // If Company Found Try to Update Else Return False
-            if(companyID >= 0) {
-                const fields = {
-                    companyID: companyID,
-                    companyLocationID: null
-                }
-                
+            if(fields){
                 this.update(fields)
-                resolve(true)
             } else {
-                resolve(false)
-            }
 
-        }
+                // Find Company By Title
+                const companyID = await this.constructor.matchCompanyToString(this.title, companies)
+
+                // If Company Found Try to Update Else Return False
+                if(companyID >= 0) {
+                    const fields = {
+                        companyID: companyID,
+                        companyLocationID: null
+                    }
+                    
+                    this.update(fields)
+                    resolve(true)
+                } else {
+                    resolve(false)
+                }
+
+            }
 
         })
     }
