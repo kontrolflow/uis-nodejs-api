@@ -61,14 +61,25 @@ class AutoTaskTicket {
 
             console.log(this)
 
+            // Check if title matches anything in the JSON Mapping Object
             const fields = await this.constructor.matchCompanyUsingMappings(this)
-
             if(fields){
+
+                // The title matched / Update the ticket with the configured fields
                 this.update(fields)
+
+            // Check if ticket is an Altero Backup report
+            } else if(this.title.includes("Control Panel Daily Report")) {
+
+                console.log("It's a backup report!!!")
+            
+            // Check if Ticket Title matches a company
             } else {
+                
 
                 // Find Company By Title
                 const companyID = await this.constructor.matchCompanyToString(this.title, companies)
+                console.log(companyID)
 
                 // If Company Found Try to Update Else Return False
                 if(companyID >= 0) {
@@ -81,6 +92,7 @@ class AutoTaskTicket {
                     resolve(true)
                 } else {
                     resolve(false)
+                    console.log("Could not find company")
                 }
 
             }
@@ -92,7 +104,7 @@ class AutoTaskTicket {
         return new Promise(resolve => {
             const lc = string.toLowerCase()
             console.log(lc)
-            let guess = false
+            let guess = -1
 
             // console.log(companies)
             if(lc.includes("vicars")) {

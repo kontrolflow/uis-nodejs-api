@@ -12,16 +12,6 @@
     },
     {
         "matches":[
-            "Control Panel Daily Report"
-        ],
-        "fields":{
-            "companyID": 0,
-            "contactID": null,
-            "companyLocationID": null
-        }
-    },
-    {
-        "matches":[
             "SCJX"
         ],
         "fields":{
