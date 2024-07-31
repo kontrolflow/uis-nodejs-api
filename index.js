@@ -31,6 +31,9 @@ app.use(function (req, res, next) {
 
 // app.use(cors())
 
+const webhookRoutes = require('./routes/webhookRoutes')
+app.use('/webhook', webhookRoutes)
+
 const autoTaskRoutes = require('./routes/autoTaskRoutes')
 app.use('/autoTask', autoTaskRoutes)
 
