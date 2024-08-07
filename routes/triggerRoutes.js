@@ -1,11 +1,9 @@
 
-
 //############################################//
 //                                            //
 //       Routes for Function Triggering       //
 //                                            //
 //############################################//
-
 
 // Imports for API Routing
 const express = require('express');
@@ -14,39 +12,52 @@ const router = express.Router();
 // App Imports
 const DattoAlert = require('../models/DattoAlert')
 
-// Sanity Check 
+
 router.get('/old-alert-resolver', async (req, res) => {
     
-    console.log("Route: /trigger/old-alert-resolver")
-    console.log(req.url)
+    var response = {message:[]}
+    response.route = "/trigger/old-alert-resolver"
+
 
     const oldAlerts = await DattoAlert.getAllOpenSixtyDayOldAlerts()
+    response.oldAlertCount = oldAlerts.length
 
-    var response = {
-        message: "Deleting Alerts 60 Days Old and Older",
-        count: oldAlerts.length,
-        totalResolved: 0,
-        totalUnresolved: 0
-    }
+    if(oldAlerts.length === 0) {
 
-    var forEach = new Promise((resolve, reject) => {
-        oldAlerts.forEach(async alert => {
-            const resolved = await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)
-            // console.log(resolved)
-            if(resolved.status) {
-                // console.log(response)
-                response.totalResolved ++
-            } else {
-                response.totalUnresolved ++
-            }
-        })
-        resolve()
-    });
-    
-    forEach.then(() => {
-        console.log(response)
+        // Zero/No Old Alerts Found
+        response.message.push("No Old Alerts Found")
         res.status(200).send(response)
-    });
+        return
+
+    } else {
+
+        // 1 or More Old Alerts Found
+        response.message.push(oldAlerts.length + "No Old Alerts Found")
+        response.message.push("Resolving Old Alerts Found")
+        response.totalResolved = 0
+        response.totalUnresolved = 0
+    
+        var forEach = new Promise((resolve, reject) => {
+            oldAlerts.forEach(async (alert, index, array) => {
+                const resolved = await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)
+                // console.log(resolved)
+                if(resolved.status) {
+                    // console.log(response)
+                    response.totalResolved ++
+                } else {
+                    response.totalUnresolved ++
+                }
+                if (index === array.length -1) resolve();
+            })
+        });
+        
+        forEach.then(() => {
+            console.log(response)
+            res.status(200).send(response)
+            return
+        });
+
+    }
 
 })
 
