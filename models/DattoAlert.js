@@ -9,43 +9,46 @@ class DattoAlert {
         this.timestamp = alert.timestamp
     }
 
-    resolveAlertIfOlderThanThirtyDays() {
+    static resolveAlertIfOlderThanSixtyDays(alert) {
         return new Promise(async resolve => {
 
             // Prep Response
             let res = { status: null, message: [] }
 
-            // Get Timestamp of 30 Days ago
+            // Get Timestamp of 60 Days ago
             const now = Date.now()
-            const thirtyDays = 30 * 24 * 60 * 60 * 1000
-            const thirtyDaysAgo = now - thirtyDays
+            const sixtyDays = 60 * 24 * 60 * 60 * 1000
+            const sixtyDaysAgo = now - sixtyDays
 
             // Resolve Alert if Older than 30 Days
-            if( this.timestamp < thirtyDaysAgo ) {
+            if( alert.timestamp < sixtyDaysAgo ) {
 
-                // Add message to responce
-                res.message.push('Alert Older than 30 Days')
+                // Add message to response
+                res.message.push('Alert older than 60 days')
+                // res.status = true
+                // resolve(res)
 
                 // Perform API Call to Resolve
-                const endpoint = "/alert/" + this.alertUid + "/resolve"
+                const endpoint = "/alert/" + alert.alertUid + "/resolve"
                 const resolveResponse = await DattoAPI.post(endpoint, {})
                 console.log(resolveResponse)
 
                 // Filter through the API Call Response
                 switch(resolveResponse.status) {
                     case 200:
-                        res.message.push("Resolved Alert: " + this.alertUid )
+                        res.message.push("Resolved Alert: " + alert.alertUid )
                         res.status = true
                         resolve(res)
                         break;
                     default:
-                        res.message.push("Unable to Resolve Alert (Unknown Error): " + this)
+                        res.message.push("Unable to Resolve Alert (Unknown Error): " + alert)
                         res.status = false
                         resolve(res)
                         break;
                 }
+                
             } else {
-                res.message.push("Timestamp younger than 30 days")
+                res.message.push('Alert younger than 60 days')
                 res.status = false
                 resolve(res)
             }
@@ -54,7 +57,7 @@ class DattoAlert {
     }
 
     // Getter Methods
-    static getAllOpenThirtyDayOldAlerts() {
+    static getAllOpenSixtyDayOldAlerts() {
 
         return new Promise(async resolve => {
 
@@ -85,13 +88,13 @@ class DattoAlert {
             // Get Timestamp of 30 Days ago
             const now = Date.now()
             // console.log(now)
-            const thirtyDays = 30 * 24 * 60 * 60 * 1000
-            const thirtyDaysAgo = now - thirtyDays
+            const sixtyDays = 60 * 24 * 60 * 60 * 1000
+            const sixtyDaysAgo = now - sixtyDays
     
             // console.log(thirtyDaysAgo)
 
             // Filter Array for Alerts Older than 30 Days
-            const oldAlerts = openAlertsArrayJSON.filter(alert => alert.timestamp < thirtyDaysAgo)
+            const oldAlerts = openAlertsArrayJSON.filter(alert => alert.timestamp < sixtyDaysAgo)
 
             // Filter Array for Alerts Older than 30 Days
             // const newAlerts = openAlertsArrayJSON.filter(alert => alert.timestamp >= thirtyDaysAgo)
@@ -105,7 +108,7 @@ class DattoAlert {
             // console.log(openAlertsArrayJSON.length)
             // console.log(oldAlerts.length)
             // console.log(newAlerts.length)
-            console.log(oldAlerts[1])
+            // console.log(oldAlerts[1])
 
             resolve(oldAlertObjects)
         })

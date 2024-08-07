@@ -61,4 +61,140 @@ describe('Datto Alert Model Testing', () => {
         }))
     })
 
+    it("Tests the alert resolver function's ability to ensure a ticket is older than 60 days before resolving", async() => {
+
+        // Alert with now as timestamp
+        const nowAlert = {
+            timestamp: Date.now()
+        }
+
+        expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(nowAlert)).toEqual(expect.objectContaining({
+            message: expect.arrayContaining([
+                expect.stringContaining('Alert younger than 60 days'),
+            ])
+        }))
+
+
+        // Alert with 1 week old timstamp
+        // const weekOldAlert = {
+        //     timestamp: Date.now() - 61 * 24 * 60 * 60 * 1000
+        // }
+
+        // expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(weekOldAlert)).toEqual(expect.objectContaining({
+        //     message: expect.arrayContaining([
+        //         expect.stringContaining('Alert younger than 60 days'),
+        //     ])
+        // }))
+
+        
+        // Alert with 60 Day old timestamp
+
+        // Alert with Jan, 1, 24 as timestamp
+
+        // Alert with Jan, 1, 23 as timestamp
+    })
+
+})
+
+describe("Tests the Alert Resolver Function's ablility to ensure a ticket is older than 60 days before resolving", () => {
+
+    // Alert with now as timestamp
+    it("Alert from NOW", async() => {
+        const alert = {
+            timestamp: Date.now()
+        }
+
+        expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)).toEqual(expect.objectContaining({
+            message: expect.arrayContaining([
+                expect.stringContaining('Alert younger than 60 days'),
+            ])
+        }))
+
+    })
+
+    // Alert with 1 week old timstamp
+    it("Alert from beginning of time", async() => {
+        const time = Date.now() - 7 * 24 * 60 * 60 * 1000
+        const alert = {
+            timestamp: time
+        }
+
+        expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)).toEqual(expect.objectContaining({
+            message: expect.arrayContaining([
+                expect.stringContaining('Alert younger than 60 days'),
+            ])
+        }))
+    })
+
+    
+    // Alert from 59 days ago
+    it("Alert from 59 days ago", async() => {
+        const time = Date.now() - 59 * 24 * 60 * 60 * 1000
+        const alert = {
+            timestamp: time
+        }
+
+        expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)).toEqual(expect.objectContaining({
+            message: expect.arrayContaining([
+                expect.stringContaining('Alert younger than 60 days'),
+            ])
+        }))
+    })
+
+    // Alert from 61 days ago
+    it("Alert from 61 days ago", async() => {
+        const time = Date.now() - 61 * 24 * 60 * 60 * 1000
+        const alert = {
+            timestamp: time
+        }
+
+        expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)).toEqual(expect.objectContaining({
+            message: expect.arrayContaining([
+                expect.stringContaining('Alert older than 60 days'),
+            ])
+        }))
+    })
+
+    // Alert with Jan, 1, 24 as timestamp
+    it("Alert from January 1st 2024", async() => {
+        const time = 1704085200
+        const alert = {
+            timestamp: time
+        }
+
+        expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)).toEqual(expect.objectContaining({
+            message: expect.arrayContaining([
+                expect.stringContaining('Alert older than 60 days'),
+            ])
+        }))
+    })
+
+    // Alert with Jan, 1, 23 as timestamp
+    it("Alert from January 1st 2023", async() => {
+        const time = 1672549200
+        const alert = {
+            timestamp: time
+        }
+
+        expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)).toEqual(expect.objectContaining({
+            message: expect.arrayContaining([
+                expect.stringContaining('Alert older than 60 days'),
+            ])
+        }))
+    })
+
+    // Alert from beginning of time
+    it("Alert from beginning of time", async() => {
+        const alert = {
+            timestamp: 0
+        }
+
+        expect(await DattoAlert.resolveAlertIfOlderThanSixtyDays(alert)).toEqual(expect.objectContaining({
+            message: expect.arrayContaining([
+                expect.stringContaining('Alert older than 60 days'),
+            ])
+        }))
+    })
+
+
 })

@@ -11,7 +11,7 @@ const express = require('express');
 const router = express.Router();
 
 // App Imports
-// const DattoAlert = require('../models/DattoAlert')
+const DattoAlert = require('../models/DattoAlert')
 // const DB = require("../serviceProviders/DB")
 
 
@@ -67,36 +67,36 @@ router.get('/get-30-day-alerts', async (req, res) => {
 })
 
 //Resolve the Alerts
-router.get('/clear-30-day-alerts', async (req, res) => {
-    console.log("Route: /datto/clear-30-day-alerts")
-    console.log(req.url)
+// router.get('/clear-30-day-alerts', async (req, res) => {
+//     console.log("Route: /datto/clear-30-day-alerts")
+//     console.log(req.url)
 
 
-    if(req.query.apiKey === process.env.USER_API_KEY) {
-        let response = {
-            message: "Clearing Alerts 30 Days Old and Older"
-        }
+//     if(req.query.apiKey === process.env.USER_API_KEY) {
+//         let response = {
+//             message: "Clearing Alerts 30 Days Old and Older"
+//         }
     
-        const oldAlerts = await DattoAlert.getAllOpenThirtyDayOldAlerts()
-        response.alertCount = oldAlerts.length
-        response.totalResolved = 0
-        response.totalUnresolved = 0
+//         const oldAlerts = await DattoAlert.getAllOpenThirtyDayOldAlerts()
+//         response.alertCount = oldAlerts.length
+//         response.totalResolved = 0
+//         response.totalUnresolved = 0
     
-        oldAlerts.forEach(async alert => {
-            const resolved = await alert.resolveAlertIfOlderThanThirtyDays()
-            if(resolved.status) {
-                response.totalResolved ++
-            } else {
-                response.totalUnresolved ++
-            }
-        })
+//         oldAlerts.forEach(async alert => {
+//             const resolved = await alert.resolveAlertIfOlderThanThirtyDays()
+//             if(resolved.status) {
+//                 response.totalResolved ++
+//             } else {
+//                 response.totalUnresolved ++
+//             }
+//         })
     
-        res.status(200).send(response)
-    } else {
-        console.log("Not Authenticated")
-        res.status(403).end()
-    }
+//         res.status(200).send(response)
+//     } else {
+//         console.log("Not Authenticated")
+//         res.status(403).end()
+//     }
     
-})
+// })
 
 module.exports = router

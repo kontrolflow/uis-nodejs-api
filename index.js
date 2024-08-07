@@ -34,6 +34,9 @@ app.use(function (req, res, next) {
 const webhookRoutes = require('./routes/webhookRoutes')
 app.use('/webhook', webhookRoutes)
 
+const triggerRoutes = require('./routes/triggerRoutes')
+app.use('/trigger', triggerRoutes)
+
 const autoTaskRoutes = require('./routes/autoTaskRoutes')
 app.use('/autoTask', autoTaskRoutes)
 
