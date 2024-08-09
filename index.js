@@ -52,6 +52,29 @@ app.use('/utilities', utilityRoutes)
 const testRoutes = require('./routes/testRoutes')
 app.use('/test', testRoutes)
 
+app.get('/', (req, res) => {
+
+    res.redirect("https://umbrellaitgroup.com/")
+    
+})
+
+app.get('/contact/:userId', (req, res) => {
+
+    let response = {
+         userId : req.params.userId,
+         referer : req.query.referer
+    }
+
+    if(response.referer == "qr-code") {
+        console.log(response)
+        res.send(response)
+    } else {
+        res.redirect("https://umbrellaitgroup.com/")
+    }
+    
+})
+
+
 
 app.get('/clients', (req, res) => {
     if(req.query.apiKey === process.env.USER_API_KEY) {
@@ -120,3 +143,5 @@ switch(process.env.DEPLOYMENT_MODE) {
         console.log("Server Failed to Start - Issue with Deployment Mode")
 
 }
+
+module.exports = app
