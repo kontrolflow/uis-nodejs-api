@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon index.js",
-    "test": "jest --watchAll --verbose --setupFiles dotenv/config",
+    "test": "jest --watchAll --verbose --setupFiles --maxWorkers=1 --forceExit --detectOpenHandles dotenv/config",
     "dev": "nodemon index.js"
   },
   "author": "",
@@ -24,6 +24,7 @@
     "openai": "^4.53.1"
   },
   "devDependencies": {
-    "@types/jest": "^29.5.0"
+    "@types/jest": "^29.5.0",
+    "supertest": "^7.0.0"
   }
 }
