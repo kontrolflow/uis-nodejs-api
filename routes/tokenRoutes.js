@@ -65,7 +65,7 @@ router.patch('/datto', async (req, res) => {
             const { exec } = require("child_process");
 
             if(process.env.DEPLOYMENT_MODE == "prod") {
-                exec("sudo pm2 restart uis-nodejs-api", (error, stdout, stderr) => {
+                exec("sudo pm2 restart uis-nodejs-api --update-env", (error, stdout, stderr) => {
                     if (error) {
                         console.log(`error: ${error.message}`);
                         return;
