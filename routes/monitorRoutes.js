@@ -1,5 +1,6 @@
 // Imports for API Routing
 const express = require('express');
+const DattoAPI = require('../serviceProviders/DattoAPI');
 const router = express.Router();
 
 // const DattoAlert = require('../models/DattoAlert')
@@ -19,19 +20,15 @@ router.get('/autotask-integration', async (req, res) => {
     console.log(req.url)
 })
 
-// General Webhook for datto (GET)
-// router.get('/webhook', async (req, res) => {
-//     console.log("API Notified of Datto Webhook")
-//     res.status(200).send("API Notified of Datto Webhook")
-//     console.log(req.url)
-// })
+router.get('/datto-token-validation', async (req, res) => {
+    
+    if(await DattoAPI.validateToken(process.env.DATTO_API_KEY)) {
+        res.status(200).send("Datto Token Valid")
+    } else {
+        res.status(500).send("Datto Token Invalid")
+    }
 
-// General Webhook for datto (POST)
-// router.post('/webhook', async (req, res) => {
-//     console.log("API Notified of Datto Webhook")
-//     res.status(200).send("API Notified of Datto Webhook")
-//     console.log(req.url)
-//     console.log(req.body)
-// })
+})
+
 
 module.exports = router

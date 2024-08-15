@@ -130,7 +130,7 @@ class DattoAPI {
             const body = fieldsToUpdate
 
             body.id = id
-
+ 
             console.log(body)
 
 
@@ -212,6 +212,36 @@ class DattoAPI {
 
             axios.get(url, config)
                 .then(res=> resolve(res.data))
+                .catch(err=> {
+                    resolve(false)
+                    console.log(err)
+                })
+
+        })
+
+    }
+
+    static validateToken(token) {
+
+        return  new Promise(resolve => {
+
+            const axios = require('axios');
+
+            // console.log(id)
+
+            const url = "https://concord-api.centrastage.net/api/v2/account"
+
+            var config = {
+                headers: {
+                    'Authorization': token
+                }
+            }
+
+            axios.get(url, config)
+                .then(res => {
+                    console.log(res)
+                    resolve(true)
+                })
                 .catch(err=> {
                     resolve(false)
                     console.log(err)
