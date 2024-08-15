@@ -62,16 +62,21 @@ router.patch('/datto', async (req, res) => {
             parsedFile.DATTO_API_KEY = newDattoApiToken
             fs.writeFileSync(sourcePath, stringify(parsedFile)) 
 
-            setTimeout(function () {
-                process.on("exit", function () {
-                    require("child_process").spawn(process.argv.shift(), process.argv, {
-                        cwd: process.cwd(),
-                        detached : true,
-                        stdio: "inherit"
-                    });
+            const { exec } = require("child_process");
+
+            if(process.env.DEPLOYMENT_MODE == "prod") {
+                exec("sudo pm2 restart uis-nodejs-api", (error, stdout, stderr) => {
+                    if (error) {
+                        console.log(`error: ${error.message}`);
+                        return;
+                    }
+                    if (stderr) {
+                        console.log(`stderr: ${stderr}`);
+                        return;
+                    }
+                    console.log(`stdout: ${stdout}`);
                 });
-                process.exit();
-            }, 500);
+            }
 
             res.status(200).send("Authenticated and valid Datto API Token Provided")
             return
