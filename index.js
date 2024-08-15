@@ -144,7 +144,7 @@ switch(process.env.DEPLOYMENT_MODE) {
         break;
 
     case "prod":
-r
+
         console.log("Starting UIS-NodeJS-API in Development Mode")
         const httpProdServer = http.createServer(app);
         httpProdServer.listen(3001, () => {
