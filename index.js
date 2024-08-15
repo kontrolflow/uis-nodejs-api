@@ -49,6 +49,9 @@ app.use('/monitor', monitorRoutes)
 const utilityRoutes = require('./routes/utilityRoutes')
 app.use('/utilities', utilityRoutes)
 
+const tokenRoutes = require('./routes/tokenRoutes')
+app.use('/tokens', tokenRoutes)
+
 const testRoutes = require('./routes/testRoutes')
 app.use('/test', testRoutes)
 
@@ -126,6 +129,11 @@ app.get('/prompt', async (req, res) => {
 
 switch(process.env.DEPLOYMENT_MODE) {
 
+    case "test":
+
+        console.log("App is in testing mode. No need to listen on a port")
+        break;
+    
     case "dev":
 
         console.log("Starting UIS-NodeJS-API in Development Mode")
@@ -136,7 +144,7 @@ switch(process.env.DEPLOYMENT_MODE) {
         break;
 
     case "prod":
-
+r
         console.log("Starting UIS-NodeJS-API in Development Mode")
         const httpProdServer = http.createServer(app);
         httpProdServer.listen(3001, () => {
