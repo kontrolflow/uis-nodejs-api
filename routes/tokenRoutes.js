@@ -52,6 +52,7 @@ router.patch('/datto', async (req, res) => {
             res.status(200).send("Authenticated and valid Datto API Token Provided")
             return
         } else {
+            
             // Token is valid, edit the .env file
             const fs = require('fs') 
             const { parse, stringify } = require('envfile')
@@ -62,21 +63,24 @@ router.patch('/datto', async (req, res) => {
             parsedFile.DATTO_API_KEY = newDattoApiToken
             fs.writeFileSync(sourcePath, stringify(parsedFile)) 
 
-            const { exec } = require("child_process");
 
-            if(process.env.DEPLOYMENT_MODE == "prod") {
-                exec("sudo pm2 restart uis-nodejs-api --update-env", (error, stdout, stderr) => {
-                    if (error) {
-                        console.log(`error: ${error.message}`);
-                        return;
-                    }
-                    if (stderr) {
-                        console.log(`stderr: ${stderr}`);
-                        return;
-                    }
-                    console.log(`stdout: ${stdout}`);
-                });
-            }
+            process.env.DATTO_API_KEY = newDattoApiToken
+
+            // const { exec } = require("child_process");
+
+            // if(process.env.DEPLOYMENT_MODE == "prod") {
+            //     exec("sudo pm2 restart uis-nodejs-api --update-env", (error, stdout, stderr) => {
+            //         if (error) {
+            //             console.log(`error: ${error.message}`);
+            //             return;
+            //         }
+            //         if (stderr) {
+            //             console.log(`stderr: ${stderr}`);
+            //             return;
+            //         }
+            //         console.log(`stdout: ${stdout}`);
+            //     });
+            // }
 
             res.status(200).send("Authenticated and valid Datto API Token Provided")
             return
