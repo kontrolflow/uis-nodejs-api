@@ -18,9 +18,9 @@ describe('AutoTask API', () => {
 
     it("Retrieves all Clients", async() => {
         expect(await AutoTaskAPI.getAllClients()).toEqual(
-            expect.arrayContaining([
-                expect.
-            ])
+            // expect.arrayContaining([
+            //     expect.
+            // ])
         )
     })
 

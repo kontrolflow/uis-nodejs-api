@@ -68,15 +68,15 @@ app.get('/contact/:userId', (req, res) => {
          referer : req.query.referer
     }
 
-    if(req.params.userId == "rdonelly") {
-        var file = ('./UmbrellaContactCards/RayDonelly.vcf');
-        res.download(file)
-        return
-    }
+    // if(req.params.userId == "rdonelly") {
+    //     var file = ('./UmbrellaContactCards/RayDonelly.vcf');
+    //     res.download(file)
+    //     return
+    // }
 
     if(response.referer == "qr-code") {
         console.log(response)
-        res.send(response)
+        res.redirect("https://umbrellaitgroup.com/team/ray-donelly/")
     } else {
         res.redirect("https://umbrellaitgroup.com/")
     }
