@@ -76,9 +76,10 @@ app.get('/contact/:userId', (req, res) => {
 
     if(response.referer == "qr-code") {
         console.log(response)
-        res.redirect("https://umbrellaitgroup.com/team/ray-donelly/")
+        res.header('PSK', 'BxjGfMDSP%xfWFvWh4L9HdMSDD9XW23P4')
+        res.redirect("https://umbrellaitgroup.com/team/ray-donelly/?referrer=qr-code")
     } else {
-        res.redirect("https://umbrellaitgroup.com/")
+        res.redirect("https://umbrellaitgroup.com/contact-us/")
     }
     
 })
