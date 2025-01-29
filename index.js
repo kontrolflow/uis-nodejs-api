@@ -63,6 +63,8 @@ app.get('/', (req, res) => {
 
 app.get('/contact/:userId', (req, res) => {
 
+    let userId = req.params.userId
+
     let response = {
          userId : req.params.userId,
          referer : req.query.referer
@@ -74,11 +76,15 @@ app.get('/contact/:userId', (req, res) => {
     //     return
     // }
 
+    let users = {
+        rdonelly : "ray-donelly",
+        jabinsay : "jullian-abinsay",
+        jbowen   : "james-bowen"
+    }
+
     if(response.referer == "qr-code") {
         console.log(response)
-        res.header('PSK', 'BxjGfMDSP%xfWFvWh4L9HdMSDD9XW23P4')
-        res.header('Referer', 'https://qr.umbrellaitgroup.com')
-        res.redirect("https://umbrellaitgroup.com/team/ray-donelly/?referrer=qr-code")
+        res.redirect("https://umbrellaitgroup.com/team/" + users[userId] + "/?referrer=qr-code&PSK=BxjGfMDSP%xfWFvWh4L9HdMSDD9XW23P4")
     } else {
         res.redirect("https://umbrellaitgroup.com/contact-us/")
     }
