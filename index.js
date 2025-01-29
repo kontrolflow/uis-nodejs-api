@@ -78,8 +78,11 @@ app.get('/contact/:userId', (req, res) => {
 
     let users = {
         rdonelly : "ray-donelly",
-        jabinsay : "jullian-abinsay",
-        jbowen   : "james-bowen"
+        aivantsov: "alex-ivantsov",
+        jbowen   : "james-bowen",
+        dranaldi : "devin-ranaldi",
+        jbisaillon : "jerry-bisaillon",
+        jabinsay : "jullian-abinsay"
     }
 
     if(response.referer == "qr-code") {
