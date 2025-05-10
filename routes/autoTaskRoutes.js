@@ -14,26 +14,27 @@ const router = express.Router();
 // })
 
 // Webhook for when a ticket gets created
-// router.get('/ticket', async (req, res) => {
-//     console.log("Ticket Creation Webhook Hit")
-//     res.status(200).send("API Notified of Ticket Creation")
+router.get('/ticket', async (req, res) => {
+    console.log("Ticket Creation Webhook Hit")
+    console.log(req.url)
+    res.status(200).send("API Notified of Ticket Creation")
 
-//     const db = new DB()
-//     const result = await db.query().collection("TicketCreatedWebhookEntries").insertOne({
-//         url: req.url
-//     })
+    // const db = new DB()
+    // const result = await db.query().collection("TicketCreatedWebhookEntries").insertOne({
+    //     url: req.url
+    // })
     
-//     if (result) {
-//         console.log("The following entry was saved:")
-//         console.log(result);
-//     } else {
-//         console.log("No result from saving:");
-//         console.log(result);
-//     }
+    // if (result) {
+    //     console.log("The following entry was saved:")
+    //     console.log(result);
+    // } else {
+    //     console.log("No result from saving:");
+    //     console.log(result);
+    // }
 
-//     db.close()
+    // db.close()
 
-// })
+})
 
 // Webhook for when a ticket gets created but a company was not found
 // This webhook should just try to find the company for the ticket and auto update if found
