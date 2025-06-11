@@ -12,6 +12,7 @@ const router = express.Router();
 
 // App Imports
 const DattoAlert = require('../models/DattoAlert')
+const DattoDevice = require('../models/DattoDevice')
 // const DB = require("../serviceProviders/DB")
 
 
@@ -98,5 +99,90 @@ router.get('/get-30-day-alerts', async (req, res) => {
 //     }
     
 // })
+
+router.get('/getAllDevices', async (req, res) => {
+    
+    console.log("Route: /datto/getAllDevices")
+    console.log(req.url)
+
+    if(req.query.apiKey === process.env.USER_API_KEY) {
+
+        const devices = await DattoDevice.getAllDevices()
+        let response = {
+            message: "Getting All Datto Devices",
+            count: devices.length,
+            alerts: devices
+        }
+        console.log(devices.length)
+        res.status(200).send(response)
+
+    } else {
+        console.log("Not Authenticated")
+        res.status(403).end()
+    }
+
+})
+
+router.get('/getCurrentDevices', async (req, res) => {
+    
+    console.log("Route: /datto/GetCurrentDevices")
+    console.log(req.url)
+
+    if(req.query.apiKey === process.env.USER_API_KEY) {
+
+        const allDevices = await DattoDevice.getAllDevices()
+
+        let cutoffEpochTime = getEpochDaysAgo(90)
+
+        let devices = allDevices.filter(device => device.lastSeen > cutoffEpochTime)
+
+        let response = {
+            message: "Getting Datto Devices Last Seen Over 90 Days Ago",
+            count: devices.length,
+            devices: devices
+        }
+        console.log(devices.length)
+        res.status(200).send(response)
+
+    } else {
+        console.log("Not Authenticated")
+        res.status(403).end()
+    }
+
+})
+
+router.get('/getDevicesOffline90Days', async (req, res) => {
+    
+    console.log("Route: /datto/getDevicesOffline90Days")
+    console.log(req.url)
+
+    if(req.query.apiKey === process.env.USER_API_KEY) {
+
+        const allDevices = await DattoDevice.getAllDevices()
+
+        let cutoffEpochTime = getEpochDaysAgo(90)
+
+        let devices = allDevices.filter(device => device.lastSeen < cutoffEpochTime)
+
+        let response = {
+            message: "Getting Datto Devices Last Seen Over 90 Days Ago",
+            count: devices.length,
+            devices: devices
+        }
+        console.log(devices.length)
+        res.status(200).send(response)
+
+    } else {
+        console.log("Not Authenticated")
+        res.status(403).end()
+    }
+
+})
+
+function getEpochDaysAgo(days) {
+  const now = Date.now(); // current time in milliseconds
+  const millisecondsPerDay = 24 * 60 * 60 * 1000;
+  return now - (days * millisecondsPerDay);
+}
 
 module.exports = router
